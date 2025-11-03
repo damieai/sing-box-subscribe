@@ -827,14 +827,14 @@
       {
         "tag": "my-direct-rules",
         "type": "remote",
-        "format": "json",
+        "format": "source",
         "url": "https://testingcf.jsdelivr.net/gh/damieai/myself@main/direct.json",
         "download_detour": "direct"
       },
       {
         "tag": "my-proxy-rules",
         "type": "remote",
-        "format": "json",
+        "format": "source",
         "url": "https://testingcf.jsdelivr.net/gh/damieai/myself@main/proxy.json",
         "download_detour": "direct"
       }
