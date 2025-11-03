@@ -28,8 +28,8 @@
       },
       {
         "tag": "local",
-        "type": "https",
-        "server": "223.5.5.5"
+        "type": "udp",
+        "server": "119.29.29.29"
       },
       {
         "tag": "fakeip",
@@ -533,7 +533,7 @@
         "tag": "geosite-category-ads-all",
         "type": "remote",
         "format": "binary",
-        "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/category-ads-all.srs",
+        "url": "https://testingcf.jsdelivr.net/gh/damieai/my-singbox-rules/blob/main/dist/AWAvenue-Ads-Rule-Singbox.srs",
         "download_detour": "direct"
       },
       {
