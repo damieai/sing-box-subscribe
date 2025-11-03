@@ -827,15 +827,15 @@
       {
         "tag": "my-direct-rules",
         "type": "remote",
-        "format": "source",
-        "url": "https://testingcf.jsdelivr.net/gh/damieai/myself@main/proxy.json", // <-- 替换成您的直连规则链接
+        "format": "json",
+        "url": "https://testingcf.jsdelivr.net/gh/damieai/myself@main/direct.json",
         "download_detour": "direct"
       },
       {
         "tag": "my-proxy-rules",
         "type": "remote",
-        "format": "source",
-        "url": "https://testingcf.jsdelivr.net/gh/damieai/myself@main/direct.json", // <-- 替换成您的代理规则链接
+        "format": "json",
+        "url": "https://testingcf.jsdelivr.net/gh/damieai/myself@main/proxy.json",
         "download_detour": "direct"
       }
     ]
