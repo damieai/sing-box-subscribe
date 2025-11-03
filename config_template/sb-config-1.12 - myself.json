@@ -507,6 +507,14 @@
         "outbound": "direct"
       },
       {
+        "rule_set": "my-direct-rules",
+        "outbound": "direct"
+      },
+      {
+        "rule_set": "my-proxy-rules",
+        "outbound": "Proxy"
+      },
+      {
         "rule_set": "geosite-openai",
         "outbound": "OpenAI"
       },
@@ -610,7 +618,7 @@
         "tag": "geosite-category-ads-all",
         "type": "remote",
         "format": "binary",
-        "url": "https://testingcf.jsdelivr.net/gh/damieai/waipo@main/AWAvenue-Ads-Rule-Singbox.srs",
+        "url": "https://testingcf.jsdelivr.net/gh/damieai/myself@main/AWAvenue-Ads-Rule-Singbox.srs",
         "download_detour": "direct"
       },
       {
@@ -814,6 +822,20 @@
         "type": "remote",
         "format": "binary",
         "url": "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/cn.srs",
+        "download_detour": "direct"
+      },
+      {
+        "tag": "my-direct-rules",
+        "type": "remote",
+        "format": "source",
+        "url": "https://testingcf.jsdelivr.net/gh/damieai/myself@main/proxy.json", // <-- 替换成您的直连规则链接
+        "download_detour": "direct"
+      },
+      {
+        "tag": "my-proxy-rules",
+        "type": "remote",
+        "format": "source",
+        "url": "https://testingcf.jsdelivr.net/gh/damieai/myself@main/direct.json", // <-- 替换成您的代理规则链接
         "download_detour": "direct"
       }
     ]
