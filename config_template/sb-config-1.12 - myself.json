@@ -533,7 +533,7 @@
         "tag": "geosite-category-ads-all",
         "type": "remote",
         "format": "binary",
-        "url": "https://testingcf.jsdelivr.net/gh/damieai/my-singbox-rules/blob/main/dist/AWAvenue-Ads-Rule-Singbox.srs",
+        "url": "https://testingcf.jsdelivr.net/gh/damieai/my-singbox-rules@main/dist/AWAvenue-Ads-Rule-Singbox.srs",
         "download_detour": "direct"
       },
       {
