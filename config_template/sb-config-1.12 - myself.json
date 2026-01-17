@@ -123,9 +123,9 @@
       "tag":"OpenAI",
       "type":"selector",
       "outbounds":[
-        "TaiWan",
-        "Singapore",
         "Japan",
+        "Singapore",
+        "TaiWan",
         "America",
         "Others"
       ],
@@ -299,10 +299,10 @@
       "tag":"Global",
       "type":"selector",
       "outbounds":[ 
-        "HongKong",
+        "Japan",
         "TaiWan",
         "Singapore",
-        "Japan",
+        "HongKong",
         "America",
         "Others",
         "direct"
