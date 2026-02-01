@@ -597,8 +597,8 @@
       {
         "tag": "geosite-category-ads-all",
         "type": "remote",
-        "format": "binary",
-        "url": "https://testingcf.jsdelivr.net/gh/damieai/my-singbox-rules@main/dist/AWAvenue-Ads-Rule-Singbox.srs",
+        "format": "source",
+        "url": "https://testingcf.jsdelivr.net/gh/damieai/my-singbox-rules@main/source/AWAvenue-Ads-Rule-Singbox.json",
         "download_detour": "direct"
       },
       {
@@ -807,17 +807,18 @@
       {
         "tag": "my-direct-rules",
         "type": "remote",
-        "format": "binary",
+        "format": "source",
         "url": "https://testingcf.jsdelivr.net/gh/damieai/my-singbox-rules@main/source/direct.json",
         "download_detour": "direct"
       },
       {
         "tag": "my-proxy-rules",
         "type": "remote",
-        "format": "binary",
-        "url": "https://testingcf.jsdelivr.net/gh/damieai/my-singbox-rules@main/dist/proxy.srs",
+        "format": "source",
+        "url": "https://testingcf.jsdelivr.net/gh/damieai/my-singbox-rules@main/source/proxy.json",
         "download_detour": "direct"
       }
     ]
   }
 }
+
