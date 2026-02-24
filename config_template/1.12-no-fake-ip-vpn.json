@@ -44,6 +44,14 @@
         "server": "google"
       },
       {
+        "rule_set": "my-direct-rules",
+        "server": "local"
+      },
+      {
+        "rule_set": "my-proxy-rules",
+        "server": "google"
+      },
+      {
         "rule_set": [
           "geosite-google",
           "geosite-youtube"
