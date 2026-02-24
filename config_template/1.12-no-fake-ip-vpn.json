@@ -63,6 +63,10 @@
         "server": "local"
       },
       {
+        "rule_set": "geosite-geolocation-!cn",
+        "server": "google"
+      },
+      {
         "query_type": [
           "A",
           "AAAA"
