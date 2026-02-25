@@ -129,8 +129,7 @@
         "TaiWan",
         "America",
         "Others"
-      ],
-      "default": "America"
+      ]
     },
     {
       "tag": "Google",
@@ -847,3 +846,4 @@
     ]
   }
 }
+
