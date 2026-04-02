@@ -158,10 +158,10 @@
       "tag": "Twitter",
       "type": "selector",
       "outbounds": [
-        "HongKong",
+        "Japan",
         "TaiWan",
         "Singapore",
-        "Japan",
+        "HongKong",
         "America",
         "Others"
       ]
@@ -215,7 +215,7 @@
         "America",
         "Others"
       ],
-      "default": "America"
+      "default": "Japan"
     },
     {
       "tag": "TikTok",
