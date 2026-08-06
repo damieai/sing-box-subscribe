@@ -354,7 +354,7 @@
         "Japan",
         "Taiwan"
       ],
-      "default": "United States",
+      "default": "Japan",
       "interrupt_exist_connections": true
     },
     {
@@ -368,7 +368,7 @@
         "Japan",
         "Taiwan"
       ],
-      "default": "United States",
+      "default": "Japan",
       "interrupt_exist_connections": true
     },
     {
@@ -411,7 +411,7 @@
         "Japan",
         "Taiwan"
       ],
-      "default": "United States",
+      "default": "Japan",
       "interrupt_exist_connections": true
     },
     {
@@ -454,7 +454,7 @@
         "Taiwan",
         "Direct"
       ],
-      "default": "HongKong",
+      "default": "Japan",
       "interrupt_exist_connections": true
     },
     {
@@ -469,7 +469,7 @@
         "Taiwan",
         "Direct"
       ],
-      "default": "United States",
+      "default": "Japan",
       "interrupt_exist_connections": true
     },
     {
