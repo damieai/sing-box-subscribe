@@ -324,7 +324,7 @@
         "Others",
         "Direct"
       ],
-      "default": "Direct",
+      "default": "Japan",
       "interrupt_exist_connections": true
     },
     {
