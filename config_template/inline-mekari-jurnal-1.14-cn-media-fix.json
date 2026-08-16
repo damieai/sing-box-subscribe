@@ -1,0 +1,929 @@
+{
+  "log": {
+    "level": "info",
+    "timestamp": true
+  },
+  "experimental": {
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090",
+      "external_ui": "zashboard",
+      "secret": "singbox",
+      "external_ui_download_url": "https://gh-proxy.com/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip",
+      "external_ui_download_detour": "Direct",
+      "default_mode": "Rule"
+    },
+    "cache_file": {
+      "enabled": true,
+      "store_fakeip": true,
+      "store_dns": true
+    }
+  },
+  "services": [
+    {
+      "type": "api",
+      "listen": "::",
+      "listen_port": 9999,
+      "secret": "singbox",
+      "dashboard": {
+        "enabled": true,
+        "path": "dashboard",
+        "download_url": "https://gh-proxy.com/https://github.com/SagerNet/sing-box-dashboard/archive/refs/heads/gh-pages.zip",
+        "http_client": "default",
+        "update_interval": "1d"
+      }
+    }
+  ],
+  "http_clients": [
+    {
+      "tag": "default",
+      "version": 2,
+      "detour": "Proxy"
+    }
+  ],
+  "dns": {
+    "servers": [
+      {
+        "tag": "cf-doh",
+        "type": "https",
+        "server": "1.1.1.1",
+        "tls": {
+          "server_name": "cloudflare-dns.com"
+        },
+        "detour": "Proxy"
+      },
+      {
+        "tag": "gg-doh",
+        "type": "https",
+        "server": "8.8.8.8",
+        "tls": {
+          "server_name": "dns.google"
+        },
+        "detour": "Proxy"
+      },
+      {
+        "tag": "ali-doh",
+        "type": "https",
+        "server": "223.5.5.5",
+        "tls": {
+          "server_name": "dns.alidns.com"
+        }
+      },
+      {
+        "tag": "tx-doh",
+        "type": "https",
+        "server": "1.12.12.21",
+        "tls": {
+          "server_name": "doh.pub"
+        }
+      },
+      {
+        "tag": "ali-udp",
+        "type": "udp",
+        "server": "223.5.5.5"
+      },
+      {
+        "tag": "tx-udp",
+        "type": "udp",
+        "server": "119.29.29.29"
+      },
+      {
+        "tag": "remote",
+        "type": "fakeip",
+        "inet4_range": "198.18.0.0/15",
+        "inet6_range": "fc00::/18"
+      },
+      {
+        "tag": "local",
+        "type": "local",
+        "neighbor_domain": [
+          ".local",
+          ".lan"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "rule_set": [
+          "Reject"
+        ],
+        "action": "predefined"
+      },
+      {
+        "clash_mode": "Direct",
+        "action": "route",
+        "server": "local"
+      },
+      {
+        "clash_mode": "Global",
+        "action": "route",
+        "server": "remote"
+      },
+      {
+        "rule_set": [
+          "AppleCN"
+        ],
+        "action": "route",
+        "server": "ali-doh"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "clash_mode": "AllowAds",
+            "invert": true
+          },
+          {
+            "rule_set": [
+              "Reject",
+              "Ads_AWAvenue"
+            ]
+          }
+        ],
+        "action": "reject"
+      },
+      {
+        "rule_set": [
+          "China-Sites-Fallback"
+        ],
+        "action": "route",
+        "server": "ali-doh",
+        "disable_optimistic_cache": true,
+        "timeout": "5s"
+      },
+      {
+        "process_name": [
+          "openvpn.exe",
+          "openvpn-gui.exe",
+          "openvpnserv.exe",
+          "openvpnserv2.exe",
+          "OpenVPNConnect.exe",
+          "openvpnagent.exe"
+        ],
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "action": "route",
+        "server": "ali-udp",
+        "disable_cache": true,
+        "disable_optimistic_cache": true
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "action": "route",
+        "server": "tx-udp",
+        "disable_cache": false,
+        "disable_optimistic_cache": true,
+        "domain_suffix": [
+          "jurnal.id",
+          "mekari.io",
+          "mekari"
+        ]
+      },
+      {
+        "rule_set": [
+          "ChinaDomain"
+        ],
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "action": "evaluate",
+        "server": "ali-udp",
+        "tag": "ali-response",
+        "timeout": "3s"
+      },
+      {
+        "rule_set": [
+          "ChinaDomain"
+        ],
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "action": "evaluate",
+        "server": "tx-udp",
+        "tag": "tx-response",
+        "timeout": "3s"
+      },
+      {
+        "rule_set": [
+          "ChinaDomain"
+        ],
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "match_response": "ali-response",
+        "ip_accept_any": true,
+        "action": "respond",
+        "race": true
+      },
+      {
+        "rule_set": [
+          "ChinaDomain"
+        ],
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "match_response": "tx-response",
+        "ip_accept_any": true,
+        "action": "respond",
+        "race": true
+      },
+      {
+        "rule_set": [
+          "ChinaDomain"
+        ],
+        "action": "route",
+        "server": "ali-udp",
+        "timeout": "3s"
+      },
+      {
+        "query_type": "HTTPS",
+        "action": "reject"
+      },
+      {
+        "domain_suffix": [
+          "lancache.steamcontent.com",
+          "10099.com.cn",
+          "msftconnecttest.com",
+          "msftncsi.com",
+          "local",
+          "lan",
+          "home",
+          "internal",
+          "corp",
+          "example.com"
+        ],
+        "server": "local"
+      },
+      {
+        "query_type": [
+          "A",
+          "AAAA"
+        ],
+        "action": "route",
+        "server": "remote",
+        "rewrite_ttl": 1
+      }
+    ],
+    "optimistic": false,
+    "strategy": "prefer_ipv4",
+    "final": "ali-doh"
+  },
+  "inbounds": [
+    {
+      "tag": "tun-in",
+      "type": "tun",
+      "address": [
+        "172.19.0.0/30",
+        "fdfe:dcba:9876::0/126"
+      ],
+      "stack": "system",
+      "auto_route": true,
+      "strict_route": true,
+      "platform": {
+        "http_proxy": {
+          "enabled": true,
+          "server": "127.0.0.1",
+          "server_port": 7890
+        }
+      }
+    },
+    {
+      "tag": "mixed-in",
+      "type": "mixed",
+      "listen": "127.0.0.1",
+      "listen_port": 7890
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "Direct",
+      "type": "direct"
+    },
+    {
+      "tag": "Proxy",
+      "type": "selector",
+      "outbounds": [
+        "HongKong",
+        "United States",
+        "Singapore",
+        "Japan",
+        "Taiwan",
+        "Others",
+        "Direct"
+      ],
+      "default": "Japan",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "no-fake",
+      "type": "selector",
+      "outbounds": [
+        "{all}"
+      ],
+      "filter": [
+        {
+          "action": "exclude",
+          "keywords": [
+            "网站|地址|剩余|过期|时间|有效|官网|建议"
+          ]
+        }
+      ],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "AI",
+      "type": "selector",
+      "outbounds": [
+        "Proxy",
+        "HongKong",
+        "United States",
+        "Singapore",
+        "Japan",
+        "Taiwan"
+      ],
+      "default": "Japan",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "Google",
+      "type": "selector",
+      "outbounds": [
+        "Proxy",
+        "HongKong",
+        "United States",
+        "Singapore",
+        "Japan",
+        "Taiwan"
+      ],
+      "default": "Japan",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "Microsoft",
+      "type": "selector",
+      "outbounds": [
+        "Proxy",
+        "HongKong",
+        "United States",
+        "Singapore",
+        "Japan",
+        "Taiwan",
+        "Direct"
+      ],
+      "default": "Direct",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "Social",
+      "type": "selector",
+      "outbounds": [
+        "Proxy",
+        "HongKong",
+        "United States",
+        "Singapore",
+        "Japan",
+        "Taiwan"
+      ],
+      "default": "HongKong",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "TikTok",
+      "type": "selector",
+      "outbounds": [
+        "Proxy",
+        "HongKong",
+        "United States",
+        "Singapore",
+        "Japan",
+        "Taiwan"
+      ],
+      "default": "Japan",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "Telegram",
+      "type": "selector",
+      "outbounds": [
+        "Proxy",
+        "HongKong",
+        "United States",
+        "Singapore",
+        "Japan",
+        "Taiwan"
+      ],
+      "default": "HongKong",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "Game",
+      "type": "selector",
+      "outbounds": [
+        "Proxy",
+        "HongKong",
+        "United States",
+        "Singapore",
+        "Japan",
+        "Taiwan",
+        "Direct"
+      ],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "Emby",
+      "type": "selector",
+      "outbounds": [
+        "Proxy",
+        "HongKong",
+        "United States",
+        "Singapore",
+        "Japan",
+        "Taiwan",
+        "Direct"
+      ],
+      "default": "Japan",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "Spotify",
+      "type": "selector",
+      "outbounds": [
+        "Proxy",
+        "HongKong",
+        "United States",
+        "Singapore",
+        "Japan",
+        "Taiwan",
+        "Direct"
+      ],
+      "default": "Japan",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "Streaming",
+      "type": "selector",
+      "outbounds": [
+        "Proxy",
+        "HongKong",
+        "United States",
+        "Singapore",
+        "Japan",
+        "Taiwan"
+      ],
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "BiliBili",
+      "type": "selector",
+      "outbounds": [
+        "HongKong",
+        "Taiwan",
+        "Direct"
+      ],
+      "default": "Direct",
+      "interrupt_exist_connections": true
+    },
+    {
+      "tag": "HongKong",
+      "type": "selector",
+      "outbounds": [
+        "{all}"
+      ],
+      "filter": [
+        {
+          "action": "include",
+          "keywords": [
+            "🇭🇰|HK|hk|香港|港|HongKong"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "Taiwan",
+      "type": "selector",
+      "outbounds": [
+        "{all}"
+      ],
+      "filter": [
+        {
+          "action": "include",
+          "keywords": [
+            "🇹🇼|TW|tw|台湾|臺灣|台|Taiwan"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "United States",
+      "type": "selector",
+      "outbounds": [
+        "{all}"
+      ],
+      "filter": [
+        {
+          "action": "include",
+          "keywords": [
+            "🇺🇸|US|us|美国|美|United States"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "Singapore",
+      "type": "selector",
+      "outbounds": [
+        "{all}"
+      ],
+      "filter": [
+        {
+          "action": "include",
+          "keywords": [
+            "🇸🇬|SG|sg|新加坡|狮|Singapore"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "Japan",
+      "type": "selector",
+      "outbounds": [
+        "{all}"
+      ],
+      "filter": [
+        {
+          "action": "include",
+          "keywords": [
+            "🇯🇵|JP|jp|日本|日|Japan"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "Others",
+      "type": "selector",
+      "outbounds": [
+        "{all}"
+      ],
+      "filter": [
+        {
+          "action": "exclude",
+          "keywords": [
+            "🇭🇰|HK|hk|香港|香|🇹🇼|TW|tw|台湾|台|🇸🇬|SG|sg|新加坡|狮|🇯🇵|JP|jp|日本|日|🇺🇸|US|us|美国|美"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "Auto",
+      "type": "urltest",
+      "outbounds": [
+        "{all}"
+      ],
+      "filter": [
+        {
+          "action": "exclude",
+          "keywords": [
+            "网站|地址|剩余|过期|时间|有效"
+          ]
+        }
+      ],
+      "url": "http://www.gstatic.com/generate_204",
+      "interval": "10m",
+      "tolerance": 50
+    }
+  ],
+  "route": {
+    "default_domain_resolver": "ali-udp",
+    "default_http_client": "default",
+    "auto_detect_interface": true,
+    "find_process": true,
+    "final": "Proxy",
+    "rules": [
+      {
+        "action": "sniff"
+      },
+      {
+        "type": "logical",
+        "mode": "or",
+        "rules": [
+          {
+            "port": 53
+          },
+          {
+            "protocol": "dns"
+          }
+        ],
+        "action": "hijack-dns"
+      },
+      {
+        "rule_set": [
+          "OpenVPN-Endpoint"
+        ],
+        "action": "route",
+        "outbound": "no-fake"
+      },
+      {
+        "rule_set": [
+          "China-Sites-Fallback"
+        ],
+        "action": "resolve",
+        "server": "ali-doh",
+        "strategy": "prefer_ipv4",
+        "disable_optimistic_cache": true,
+        "timeout": "5s"
+      },
+      {
+        "rule_set": [
+          "China-Sites-Fallback"
+        ],
+        "action": "route",
+        "outbound": "Direct"
+      },
+      {
+        "action": "resolve",
+        "server": "tx-udp",
+        "strategy": "ipv4_only",
+        "disable_cache": false,
+        "disable_optimistic_cache": true,
+        "timeout": "5s",
+        "domain_suffix": [
+          "jurnal.id",
+          "mekari.io",
+          "mekari"
+        ]
+      },
+      {
+        "action": "route",
+        "outbound": "Direct",
+        "domain_suffix": [
+          "jurnal.id",
+          "mekari.io",
+          "mekari"
+        ]
+      },
+      {
+        "ip_is_private": true,
+        "action": "route",
+        "outbound": "Direct"
+      },
+      {
+        "clash_mode": "Direct",
+        "action": "route",
+        "outbound": "Direct"
+      },
+      {
+        "rule_set": [
+          "AppleCN"
+        ],
+        "action": "route",
+        "outbound": "Direct"
+      },
+      {
+        "type": "logical",
+        "mode": "and",
+        "rules": [
+          {
+            "clash_mode": "AllowAds",
+            "invert": true
+          },
+          {
+            "rule_set": [
+              "Reject",
+              "Ads_AWAvenue"
+            ]
+          }
+        ],
+        "action": "reject"
+      },
+      {
+        "rule_set": [
+          "AI"
+        ],
+        "action": "route",
+        "outbound": "AI"
+      },
+      {
+        "rule_set": [
+          "Telegram"
+        ],
+        "action": "route",
+        "outbound": "Telegram"
+      },
+      {
+        "rule_set": [
+          "Twitter",
+          "Facebook"
+        ],
+        "action": "route",
+        "outbound": "Social"
+      },
+      {
+        "rule_set": [
+          "TikTok"
+        ],
+        "action": "route",
+        "outbound": "TikTok"
+      },
+      {
+        "rule_set": [
+          "Steam",
+          "Epic"
+        ],
+        "action": "route",
+        "outbound": "Game"
+      },
+      {
+        "rule_set": [
+          "Google",
+          "YouTube",
+          "Github"
+        ],
+        "action": "route",
+        "outbound": "Google"
+      },
+      {
+        "rule_set": [
+          "Microsoft"
+        ],
+        "action": "route",
+        "outbound": "Microsoft"
+      },
+      {
+        "rule_set": [
+          "Emby"
+        ],
+        "action": "route",
+        "outbound": "Emby"
+      },
+      {
+        "rule_set": [
+          "Spotify"
+        ],
+        "action": "route",
+        "outbound": "Spotify"
+      },
+      {
+        "rule_set": [
+          "Bilibili"
+        ],
+        "action": "route",
+        "outbound": "BiliBili"
+      },
+      {
+        "rule_set": [
+          "Bahamut",
+          "Netflix",
+          "Disney",
+          "PrimeVideo",
+          "HBO"
+        ],
+        "action": "route",
+        "outbound": "Streaming"
+      },
+      {
+        "rule_set": [
+          "ChinaDomain"
+        ],
+        "action": "route",
+        "outbound": "Direct"
+      },
+      {
+        "rule_set": [
+          "Proxy"
+        ],
+        "action": "route",
+        "outbound": "Proxy"
+      },
+      {
+        "rule_set": [
+          "AppleProxy"
+        ],
+        "action": "route",
+        "outbound": "Proxy"
+      },
+      {
+        "action": "resolve"
+      },
+      {
+        "rule_set": [
+          "ChinaIP"
+        ],
+        "action": "route",
+        "outbound": "Direct"
+      }
+    ],
+    "rule_set": [
+      {
+        "type": "inline",
+        "tag": "OpenVPN-Endpoint",
+        "rules": [
+          {
+            "process_name": [
+              "openvpn.exe",
+              "openvpn-gui.exe",
+              "openvpnserv.exe",
+              "openvpnserv2.exe",
+              "OpenVPNConnect.exe",
+              "openvpnagent.exe"
+            ]
+          },
+          {
+            "ip_cidr": [
+              "147.139.192.215/32"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "inline",
+        "tag": "China-Sites-Fallback",
+        "rules": [
+          {
+            "domain_suffix": [
+              "cn",
+              "qq.com",
+              "gtimg.com",
+              "qpic.cn",
+              "weixin.qq.com",
+              "wechat.com",
+              "douyin.com",
+              "douyincdn.com",
+              "byteimg.com",
+              "toutiao.com",
+              "toutiaoimg.com",
+              "weibo.com",
+              "weibo.cn",
+              "sinaimg.cn",
+              "bilibili.com",
+              "hdslb.com",
+              "bilivideo.com",
+              "zhihu.com",
+              "zhimg.com",
+              "xiaohongshu.com",
+              "xhscdn.com",
+              "alicdn.com",
+              "aliyuncs.com",
+              "taobao.com",
+              "tmall.com",
+              "jd.com",
+              "jdcache.com",
+              "baidu.com",
+              "bdimg.com",
+              "bdstatic.com",
+              "huaban.com",
+              "huabanimg.com",
+              "zcool.cn",
+              "zcool.com.cn",
+              "ui.cn",
+              "gaoding.com",
+              "chuangkit.com"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "remote",
+        "tag": [
+          "Reject",
+          "Ads_AWAvenue",
+          "Proxy",
+          "AI",
+          "Telegram",
+          "Twitter",
+          "Facebook",
+          "TikTok",
+          "Steam",
+          "Epic",
+          "Google",
+          "YouTube",
+          "Github",
+          "Microsoft",
+          "Bilibili",
+          "Bahamut",
+          "Emby",
+          "Spotify",
+          "Netflix",
+          "Disney",
+          "PrimeVideo",
+          "HBO",
+          "AppleCN",
+          "AppleProxy",
+          "ChinaDomain",
+          "ChinaIP"
+        ],
+        "format": "binary",
+        "url": "https://gh-proxy.com/https://raw.githubusercontent.com/Repcz/Tool/X/sing-box/Rules/{tag}.srs",
+        "update_interval": "24h"
+      }
+    ]
+  }
+}
